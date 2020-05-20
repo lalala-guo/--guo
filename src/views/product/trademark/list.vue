@@ -29,11 +29,11 @@
     </el-pagination>
     <!-- 添加的弹框 -->
     <el-dialog :title="form.id ? '更新' : '添加'" :visible.sync="isShowDialog">
-      <el-form :model="form" style="width:80%;">
-        <el-form-item label="品牌名称" :label-width="formLabelWidth">
+      <el-form :model="form" style="width:80%;" :rules="rules" ref="ruleForm">
+        <el-form-item label="品牌名称" :label-width="formLabelWidth"  prop="tmName">
           <el-input v-model="form.tmName" autocomplete="off" placeholder="请输入品牌名称"></el-input>
         </el-form-item>
-        <el-form-item label="品牌LOGO" :label-width="formLabelWidth">
+        <el-form-item label="品牌LOGO" :label-width="formLabelWidth" prop="logoUrl">
           <!-- action:"http://182.92.128.115/admin/product/fileUpload"   后台获取图片的路径   跨域   利用代理服务器 /dev-api -->
           <el-upload class="avatar-uploader" action="/dev-api/admin/product/fileUpload" :show-file-list="false"
             :on-success="handleLogoSuccess" :before-upload="beforeLogoUpload">
@@ -68,6 +68,25 @@
           logoUrl: ''
         },
         formLabelWidth: '100px',
+        rules:{
+          /*
+          品牌名称:
+              必须输入   输入过程中触发校验
+              长度必须在2-10个之间   失去焦点时触发校验
+          品牌LOGO:
+              必须有
+          */
+          tmName: [
+            { required: true, message: '请输入品牌名称', trigger: 'change' },
+            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+             /* validator校验器: 用于校验的回调函数 */
+            // { validator: this.validateTmName, trigger: 'blur' }
+          ],
+          logoUrl: [
+             { required: true, message: '请指定LOGO图片' }
+          ]
+
+        }
       }
 
     },
@@ -92,30 +111,45 @@
         });
       },
       showUpdate(trademark){
-        this.form = trademark
         // 显示
+        // this.form = trademark
+        // 在取消的时候更改的数据依旧显示
+        // 是因为 form的指向和trademark的指向一致, 更改时form直接更改了trademark里面的数据
+        // 利用解构赋值来操作,就不会直接更改   即利用浅拷贝
+        this.form = {...trademark}
         this.isShowDialog = true
       },
-      async addOrUpdateTrademark(){
-        const trademark = this.form
-        let result
-        if(trademark.id){
-           result = await this.$API.trademark.update(trademark)
-        }else{
-           result = await this.$API.trademark.add(trademark)
-        }
-        if(result.code === 200){
-          this.$message.success(`${trademark.id ? '更新' : '添加'} 品牌成功`)
-          this.isShowDialog = false
-          this.getTrademarkes(trademark.id ? this.page : 1)
-          // 清除数据
-          this.form = {
-            tmName: '',
-            logoUrl: ''
+       addOrUpdateTrademark(){
+        // 表单验证  利用element-ui的form的表单验证
+        this.$refs.ruleForm.validate(async (valid) => {
+          if (valid) {  //验证通过
+            const trademark = this.form
+            let result
+            if(trademark.id){
+              result = await this.$API.trademark.update(trademark)
+            }else{
+              result = await this.$API.trademark.add(trademark)
+            }
+            if(result.code === 200){
+              this.$message.success(`${trademark.id ? '更新' : '添加'} 品牌成功`)
+              this.isShowDialog = false
+              this.getTrademarkes(trademark.id ? this.page : 1)
+              // 清除数据
+              this.form = {
+                tmName: '',
+                logoUrl: ''
+              }
+            }else{ //验证不通过  不需要写什么东西  自动提示内容
+
+            }
+
+          } else {
+            console.log('error submit!!');
+            return false;
           }
-        }else{
-          this.$message.error(`${trademark.id ? '更新' : '添加'}品牌失败`)
-        }
+        });
+
+
 
       },
       beforeLogoUpload(file){
