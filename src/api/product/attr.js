@@ -1,0 +1,42 @@
+/*
+商品管理的品牌管理相关接口请求函数的模块
+*/
+
+import request from '@/utils/request'  // 相当于ajax
+
+// const api_name = '/admin/product/baseTrademark'
+
+export default {
+/*
+  根据3级分类获取属性列表
+  GET /admin/product/attrInfoList/{category1Id}/{category2Id}/{category3Id}
+  */
+ getList(category1Id,category2Id,category3Id){
+   return  request(`/admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`)
+ },
+
+  /*
+  根据ID删除对应的属性
+  DELETE /admin/product/deleteAttr/{attrId}
+  */
+ remove(id){
+   return request.delete(`/admin/product/deleteAttr/${id}`)
+ },
+
+ /*
+  根据属性id获取属性值列表
+  GET /admin/product/getAttrValueList/{attrId}
+  */
+ getValueList(attrId){
+   return request(`/admin/product/getAttrValueList/${attrId}`)
+ },
+
+ /*
+  添加/更新属性
+  POST /admin/product/saveAttrInfo
+  attrInfo如果有id那就是更新, 如果没有id那就是添加
+  */
+ addOrUpdate(){
+   return request.post('/admin/product/saveAttrInfo', attrInfo)
+ }
+}
