@@ -58,7 +58,7 @@
         // 分发事件  通知父组件
         // this.$emit('categoryChange',{categoryId: category1Id, level: 1})
         const result = await this.$API.category.getCategorys2(category1Id)
-          this.category2List = result.data
+        this.category2List = result.data
       },
       async handleChange2(category2Id){
         this.cForm.category3Id = ''
