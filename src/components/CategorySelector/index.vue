@@ -2,19 +2,19 @@
   <div>
     <el-form :inline="true" :model="cForm" class="demo-form-inline">
       <el-form-item label="一级分类">
-        <el-select v-model="cForm.category1Id" placeholder="选择一级分类" @change="handleChange1">
+        <el-select :disabled="disabled" v-model="cForm.category1Id" placeholder="选择一级分类" @change="handleChange1">
           <el-option :label="item.name" :value="item.id" v-for="item in category1List" :key='item.id'></el-option>
         </el-select>
       </el-form-item>
 
       <el-form-item label="二级分类">
-        <el-select v-model="cForm.category2Id" placeholder="选择二级分类" @change="handleChange2">
+        <el-select :disabled="disabled" v-model="cForm.category2Id" placeholder="选择二级分类" @change="handleChange2">
           <el-option :label="item.name" :value="item.id" v-for="item in category2List" :key="item.id"></el-option>
         </el-select>
       </el-form-item>
 
       <el-form-item label="三级分类">
-        <el-select v-model="cForm.category3Id" placeholder="选择三级分类" @change="handleChange3">
+        <el-select :disabled="disabled" v-model="cForm.category3Id" placeholder="选择三级分类" @change="handleChange3">
           <el-option :label="item.name" :value="item.id" v-for="item in category3List" :key="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -27,6 +27,7 @@
     name: 'CategorySelector',
     data(){
       return {
+        disabled: false, // 下拉列表是否禁用
         cForm:{
           category1Id: '',
           category2Id: '',
