@@ -60,6 +60,7 @@
         // this.$emit('categoryChange',{categoryId: category1Id, level: 1})
         const result = await this.$API.category.getCategorys2(category1Id)
         this.category2List = result.data
+        this.$emit('categoryChange', {categoryId: category1Id, level: 1})
       },
       async handleChange2(category2Id){
         this.cForm.category3Id = ''
@@ -68,6 +69,7 @@
         // this.$emit('categoryChange',{categoryId: category2Id, level: 2})
         const result = await this.$API.category.getCategorys3(category2Id)
           this.category3List = result.data
+          this.$emit('categoryChange', {categoryId: category2Id, level: 2})
       },
       handleChange3(category3Id){
         // 分发事件  通知父组件
