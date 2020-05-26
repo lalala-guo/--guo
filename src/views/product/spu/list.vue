@@ -99,10 +99,10 @@ import SkuForm from '../components/skuForm'
       }
     },
     mounted(){
-      // this.category1Id = 2
-      // this.category2Id = 13
-      // this.category3Id = 61
-      // this.getSpuList()
+      this.category1Id = 2
+      this.category2Id = 13
+      this.category3Id = 61
+      this.getSpuList()
     },
     watch: {
     // 当isShowList发生改变时执行处理: 更新cs组件的disabled状态数据
@@ -135,7 +135,7 @@ import SkuForm from '../components/skuForm'
       },
 
       showSkuAdd(spu){
-        console.log("cccccccccccc",this.category1Id,this.category2Id)
+        // console.log("cccccccccccc",this.category1Id,this.category2Id)
         this.isShowSkuForm = true
         // 浅拷贝spu内的数据, 防止更新列表中的数据
         spu = { ...spu }
